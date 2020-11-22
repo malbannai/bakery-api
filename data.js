@@ -1,5 +1,6 @@
 const data = [
   {
+    id: 1,
     name: "Bread roll",
     slug: "bread-roll",
     image:
@@ -8,6 +9,7 @@ const data = [
     description: "A",
   },
   {
+    id: 2,
     name: "Cookies",
     slug: "cookies",
     image:
@@ -16,6 +18,7 @@ const data = [
     description: "B",
   },
   {
+    id: 3,
     name: "Apple Pie",
     slug: "apple-pie",
     image:
@@ -24,6 +27,7 @@ const data = [
     description: "C",
   },
   {
+    id: 4,
     name: "Lemon Cake",
     slug: "lemon-cake",
     image:
