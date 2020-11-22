@@ -38,4 +38,16 @@ app.post("/items", (req, res) => {
   res.status(201).json(newItem);
 });
 
+//Updating
+app.put("/items/:itemId", (req, res) => {
+  const { itemId } = req.params;
+  const foundCookie = data.find((item) => item.id === +itemId);
+  if (foundCookie) {
+    for (const key in req.body) foundCookie[key] = req.body[key];
+    res.status(204).end();
+  } else {
+    res.status(404).json({ message: "Item not found" });
+  }
+});
+
 app.listen(8000);
