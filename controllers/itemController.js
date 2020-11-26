@@ -1,37 +1,54 @@
-let data = require("../data");
-const slugify = require("slugify");
+const { Data } = require("../db/models");
 
-exports.myList = (req, res) => {
-  res.json(data);
-};
-
-exports.deleteItem = (req, res) => {
-  const { itemId } = req.params;
-  const foundItem = data.find((item) => item.id === +itemId);
-  if (foundItem) {
-    data = data.filter((item) => item.id !== +itemId);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: "Item not found" });
+exports.myList = async (req, res) => {
+  try {
+    const data = await Data.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-exports.createItem = (req, res) => {
-  const id = data[data.length - 1].id + 1;
-  const slug = slugify(req.body.name, { lower: true });
-  const newItem = { id, slug, ...req.body };
-  data.push(newItem);
-  res.status(201).json(newItem);
+//Delete
+exports.deleteItem = async (req, res) => {
+  const { itemId } = req.params;
+  try {
+    const foundItem = await Data.findByPk(itemId);
+    if (foundItem) {
+      await foundItem.destroy();
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Item not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-exports.updateItem = (req, res) => {
+//Create
+exports.createItem = async (req, res) => {
+  try {
+    const newItem = await Data.create(req.body);
+    res.status(201).json(newItem);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//Update
+exports.updateItem = async (req, res) => {
   const { itemId } = req.params;
-  const foundItem = data.find((item) => item.id === +itemId);
-  if (foundItem) {
-    for (const key in req.body) foundItem[key] = req.body[key];
-    foundItem.slug = slugify(req.body.name, { lower: true });
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: "Item not found" });
+  try {
+    const foundItem = await Data.findByPk(itemId);
+    if (foundItem) {
+      await foundItem.update(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Item not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
