@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser"); //bodyParser
 const db = require("./db/models");
 // const { serverError } = require("./Errors/ServerError");
-
+const path = require("path");
 const app = express();
 const itemsRoutes = require("./routes/items");
 
@@ -11,6 +11,7 @@ const itemsRoutes = require("./routes/items");
 app.use(cors());
 app.use(bodyParser.json()); //bodyParser
 app.use("/items", itemsRoutes);
+app.use("/media", express.static(path.join(__dirname, "media")));
 // app.use("/*", serverError);
 
 // The Path not found Middleware: its used after all the functions above dont work
