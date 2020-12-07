@@ -4,8 +4,15 @@ const bodyParser = require("body-parser"); //bodyParser
 const db = require("./db/models");
 // const { serverError } = require("./Errors/ServerError");
 const path = require("path");
+
+const userRoutes = require("./routes/users");
+
 const app = express();
 const itemsRoutes = require("./routes/items");
+
+//Bakeries
+const bakeryRoutes = require("./routes/bakeries");
+app.use(userRoutes);
 
 // Middlewares
 app.use(cors());
@@ -13,6 +20,7 @@ app.use(bodyParser.json()); //bodyParser
 app.use("/items", itemsRoutes);
 app.use("/media", express.static(path.join(__dirname, "media")));
 // app.use("/*", serverError);
+app.use("/bakeries", bakeryRoutes);
 
 // The Path not found Middleware: its used after all the functions above dont work
 app.use((req, res, next) => {
@@ -33,6 +41,7 @@ app.use((err, req, res, next) => {
 const run = async () => {
   try {
     await db.sequelize.sync({ alter: true });
+    // await db.sequelize.sync({ force: true });
     console.log("Connection to the database successful!");
     await app.listen(8000, () => {
       console.log("The application is running on localhost:8000");

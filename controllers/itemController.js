@@ -1,4 +1,4 @@
-const { Data } = require("../db/models");
+const { Data, Bakery } = require("../db/models");
 
 //Update and Delete are soooo similar, so we will use that as an advantage
 exports.fetchItem = async (itemId, next) => {
@@ -13,7 +13,12 @@ exports.fetchItem = async (itemId, next) => {
 exports.myList = async (req, res, next) => {
   try {
     const data = await Data.findAll({
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+      attributes: { exclude: ["bakeryId", "createdAt", "updatedAt"] },
+      include: {
+        model: Bakery,
+        as: "bakery",
+        attributes: ["name"],
+      },
     });
     res.json(data);
   } catch (error) {
@@ -35,10 +40,12 @@ exports.deleteItem = async (req, res, next) => {
 
 //Create
 exports.createItem = async (req, res, next) => {
+  const { bakeryId } = req.params;
   try {
     if (req.file) {
       req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
     }
+    req.body.bakeryId = +bakeryId;
     const newItem = await Data.create(req.body);
     res.status(201).json(newItem);
   } catch (error) {

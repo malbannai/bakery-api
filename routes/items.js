@@ -4,7 +4,6 @@ const {
   myList,
   deleteItem,
   updateItem,
-  createItem,
   fetchItem,
 } = require("../controllers/itemController");
 
@@ -32,9 +31,6 @@ router.get("/", myList);
 
 // Delete:
 router.delete("/:itemId", deleteItem);
-
-// Creating:
-router.post("/", upload.single("image"), createItem);
 
 //Updating
 router.put("/:itemId", upload.single("image"), updateItem);
